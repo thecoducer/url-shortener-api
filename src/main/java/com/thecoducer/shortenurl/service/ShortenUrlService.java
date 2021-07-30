@@ -5,7 +5,6 @@ import com.thecoducer.shortenurl.dto.ResponseDTO;
 import com.thecoducer.shortenurl.dto.UrlInfoDTO;
 import com.thecoducer.shortenurl.model.UrlInfo;
 import com.thecoducer.shortenurl.repository.ShortenUrlRepository;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -26,18 +25,23 @@ public class ShortenUrlService {
     @Autowired
     private ShortenUrlRepository shortenUrlRepository;
 
+    @Autowired
+    private UniqueShortKeyGeneratorService uniqueShortKeyGeneratorService;
+
     public ResponseEntity<ResponseDTO> generateAndSaveShortKey(String url) {
+        // remove leading and trailing spaces, if any
+        url = url.trim();
+
         String shortKey = shortenUrlRepository.findShortKeyByURL(url);
 
         // check if url already exists or not
         if(shortKey != null) {
             responseDTO.setMessage("Short key is already present for the given URL.");
         }else{
-            // generate unique short key
             try {
-                shortKey = DigestUtils.md5Hex(url).toUpperCase();
+                shortKey = uniqueShortKeyGeneratorService.generateUniqueShortKey(url);
 
-                UrlInfo urlInfo = new UrlInfo(url, shortKey);
+                UrlInfo urlInfo = new UrlInfo(url, shortKey, System.currentTimeMillis());
                 shortenUrlRepository.save(urlInfo);
 
                 responseDTO.setMessage("Short key has been generated and saved successfully.");
@@ -97,6 +101,8 @@ public class ShortenUrlService {
             UrlInfoDTO urlInfoDTO = new UrlInfoDTO();
             urlInfoDTO.setURL(obj.getUrl());
             urlInfoDTO.setUsageCount(obj.getUsageCount());
+            urlInfoDTO.setShortKey(obj.getShortKey());
+            urlInfoDTO.setCreatedAt(obj.getCreatedAt());
             urlInfoDTOList.add(urlInfoDTO);
         }
 

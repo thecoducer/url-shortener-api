@@ -18,13 +18,17 @@ public class UrlInfo {
     @Column(name = "usage_count", nullable = false)
     private int usageCount;
 
+    @Column(name = "created_at", nullable = false)
+    private long createdAt;
+
     public UrlInfo() {
 
     }
 
-    public UrlInfo(String url, String shortKey) {
+    public UrlInfo(String url, String shortKey, long createdAt) {
         this.url = url;
         this.shortKey = shortKey;
+        this.createdAt = createdAt;
     }
 
     public int getId() {
@@ -57,5 +61,13 @@ public class UrlInfo {
 
     public void setUsageCount(int usageCount) {
         this.usageCount = usageCount;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 }
