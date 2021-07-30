@@ -1,4 +1,4 @@
-package com.thecoducer.shortenurl.models;
+package com.thecoducer.shortenurl.model;
 
 import javax.persistence.*;
 
@@ -9,13 +9,13 @@ public class UrlInfo {
     @Column(name = "id")
     private int Id;
 
-    @Column(name = "url")
+    @Column(name = "url", nullable = false)
     private String URL;
 
     @Column(name = "short_key", nullable = false, unique = true)
     private String ShortKey;
 
-    @Column(name = "usage_count")
+    @Column(name = "usage_count", nullable = false)
     private int UsageCount;
 
     public UrlInfo() {

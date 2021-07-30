@@ -1,12 +1,10 @@
-package com.thecoducer.shortenurl.repositories;
+package com.thecoducer.shortenurl.repository;
 
-import com.thecoducer.shortenurl.models.UrlInfo;
+import com.thecoducer.shortenurl.model.UrlInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface ShortenUrlRepository extends JpaRepository<UrlInfo, Integer> {

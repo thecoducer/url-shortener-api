@@ -1,6 +1,6 @@
-package com.thecoducer.shortenurl.entities;
+package com.thecoducer.shortenurl.dto;
 
-public class LatestUsageCount {
+public class CountDTO {
     private int usageCount;
 
     public int getUsageCount() {

@@ -1,9 +1,10 @@
-package com.thecoducer.shortenurl.controllers;
+package com.thecoducer.shortenurl.controller;
 
-import com.thecoducer.shortenurl.entities.LatestUsageCount;
-import com.thecoducer.shortenurl.entities.Response;
-import com.thecoducer.shortenurl.models.UrlInfo;
-import com.thecoducer.shortenurl.services.ShortenUrlService;
+import com.thecoducer.shortenurl.dto.CountDTO;
+import com.thecoducer.shortenurl.dto.ResponseDTO;
+import com.thecoducer.shortenurl.dto.UrlInfoDTO;
+import com.thecoducer.shortenurl.model.UrlInfo;
+import com.thecoducer.shortenurl.service.ShortenUrlService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,25 +24,25 @@ public class ShortenUrlController {
 
     @GetMapping("storeurl")
     @ApiOperation(value = "Generate a unique short key for the given URL and store their mapping.")
-    public ResponseEntity<Response> shortenAndStoreUrl(@RequestParam String url) {
+    public ResponseEntity<ResponseDTO> shortenAndStoreUrl(@RequestParam String url) {
         return shortenUrlService.generateAndSaveShortKey(url);
     }
 
     @GetMapping("get")
     @ApiOperation(value = "Get unique short key for a URL and also increment its usage count.")
-    public ResponseEntity<Response> retrieveShortKey(@RequestParam String url) {
+    public ResponseEntity<ResponseDTO> retrieveShortKey(@RequestParam String url) {
         return shortenUrlService.getShortKeyAndIncrementCount(url);
     }
 
     @GetMapping("count")
     @ApiOperation(value = "Get latest usage count of a URL.")
-    public ResponseEntity<LatestUsageCount> retrieveLatestUsageCount(@RequestParam String url) {
+    public ResponseEntity<CountDTO> retrieveLatestUsageCount(@RequestParam String url) {
         return shortenUrlService.getLatestUsageCount(url);
     }
 
     @GetMapping("list")
     @ApiOperation(value = "Display all URLs and their counts.")
-    public List<UrlInfo> retrieveUrlAndCounts() {
+    public List<UrlInfoDTO> retrieveUrlAndCounts() {
         return shortenUrlService.getUrlInfoData();
     }
 }

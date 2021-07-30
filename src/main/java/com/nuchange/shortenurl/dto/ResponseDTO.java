@@ -1,6 +1,6 @@
-package com.thecoducer.shortenurl.entities;
+package com.thecoducer.shortenurl.dto;
 
-public class Response {
+public class ResponseDTO {
     private String url;
     private String message;
     private String shortKey;
