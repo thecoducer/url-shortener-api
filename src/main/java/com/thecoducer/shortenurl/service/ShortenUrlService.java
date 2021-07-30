@@ -92,7 +92,7 @@ public class ShortenUrlService {
             urlInfoList = shortenUrlRepository.findAll();
         }else{
             urlInfoList = shortenUrlRepository.findAll(
-                    PageRequest.of(page.orElse(0), size.orElse(10), Sort.Direction.DESC, sortBy.orElse("id"))
+                    PageRequest.of(page.orElse(0), size.orElse(10), Sort.Direction.ASC, sortBy.orElse("id"))
             ).getContent();
         }
 
