@@ -7,55 +7,55 @@ public class UrlInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int Id;
+    private int id;
 
     @Column(name = "url", nullable = false)
-    private String URL;
+    private String url;
 
     @Column(name = "short_key", nullable = false, unique = true)
-    private String ShortKey;
+    private String shortKey;
 
     @Column(name = "usage_count", nullable = false)
-    private int UsageCount;
+    private int usageCount;
 
     public UrlInfo() {
 
     }
 
-    public UrlInfo(String URL, String shortKey) {
-        this.URL = URL;
-        ShortKey = shortKey;
+    public UrlInfo(String url, String shortKey) {
+        this.url = url;
+        this.shortKey = shortKey;
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
-    public String getURL() {
-        return URL;
+    public String getUrl() {
+        return url;
     }
 
-    public void setURL(String URL) {
-        this.URL = URL;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getShortKey() {
-        return ShortKey;
+        return shortKey;
     }
 
     public void setShortKey(String shortKey) {
-        ShortKey = shortKey;
+        this.shortKey = shortKey;
     }
 
     public int getUsageCount() {
-        return UsageCount;
+        return usageCount;
     }
 
     public void setUsageCount(int usageCount) {
-        UsageCount = usageCount;
+        this.usageCount = usageCount;
     }
 }

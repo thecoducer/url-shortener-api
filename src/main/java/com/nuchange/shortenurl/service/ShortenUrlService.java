@@ -7,6 +7,8 @@ import com.thecoducer.shortenurl.model.UrlInfo;
 import com.thecoducer.shortenurl.repository.ShortenUrlRepository;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ShortenUrlService {
@@ -46,7 +49,7 @@ public class ShortenUrlService {
         responseDTO.setUrl(url);
         responseDTO.setShortKey(shortKey);
 
-        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.OK);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @Transactional
@@ -68,23 +71,31 @@ public class ShortenUrlService {
         responseDTO.setShortKey(shortKey);
         responseDTO.setUrl(url);
 
-        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.OK);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     public ResponseEntity<CountDTO> getLatestUsageCount(String url) {
         CountDTO countDTO = new CountDTO();
         countDTO.setUsageCount(shortenUrlRepository.findUsageCountByURL(url));
 
-        return new ResponseEntity<CountDTO>(countDTO, HttpStatus.OK);
+        return new ResponseEntity<>(countDTO, HttpStatus.OK);
     }
 
-    public List<UrlInfoDTO> getUrlInfoData() {
-        List<UrlInfo> urlInfoList = shortenUrlRepository.findAll();
-        List<UrlInfoDTO> urlInfoDTOList = new ArrayList<>();
+    public List<UrlInfoDTO> getUrlInfoData(Optional<Integer> page, Optional<Integer> size, Optional<String> sortBy) {
+        List<UrlInfo> urlInfoList;
 
+        if(page.isEmpty() && size.isEmpty() && sortBy.isEmpty()) {
+            urlInfoList = shortenUrlRepository.findAll();
+        }else{
+            urlInfoList = shortenUrlRepository.findAll(
+                    PageRequest.of(page.orElse(0), size.orElse(10), Sort.Direction.DESC, sortBy.orElse("id"))
+            ).getContent();
+        }
+
+        List<UrlInfoDTO> urlInfoDTOList = new ArrayList<>();
         for(UrlInfo obj : urlInfoList) {
             UrlInfoDTO urlInfoDTO = new UrlInfoDTO();
-            urlInfoDTO.setURL(obj.getURL());
+            urlInfoDTO.setURL(obj.getUrl());
             urlInfoDTO.setUsageCount(obj.getUsageCount());
             urlInfoDTOList.add(urlInfoDTO);
         }
