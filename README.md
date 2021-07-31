@@ -30,10 +30,10 @@ spring.datasource.password= <your password here>
 ![](https://raw.githubusercontent.com/thecoducer/url-shortener-api/main/docs/app-architecture.jpg)
 
 ## How short key generation works?
-![](https://raw.githubusercontent.com/thecoducer/url-shortener-api/main/docs/shortening-technique.png)
+![](https://raw.githubusercontent.com/thecoducer/url-shortener-api/main/docs/shortening-technique.png) <br/>
 Using this technique we can generate around 280 Trillion unique short keys.
 
 ## Database Design
-![](https://raw.githubusercontent.com/thecoducer/url-shortener-api/main/docs/db-design.jpg)
+![](https://raw.githubusercontent.com/thecoducer/url-shortener-api/main/docs/db-design.jpg) <br/>
 ![](https://raw.githubusercontent.com/thecoducer/url-shortener-api/main/docs/db-schema.jpg)
 
