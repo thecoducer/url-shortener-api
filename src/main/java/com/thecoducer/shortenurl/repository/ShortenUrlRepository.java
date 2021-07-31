@@ -18,5 +18,7 @@ public interface ShortenUrlRepository extends JpaRepository<UrlInfo, Integer> {
     @Query(value = "select usage_count from url_info where url = :url", nativeQuery = true)
     int findUsageCountByURL(String url);
 
+    @Query(value = "select url from url_info order by rand() limit 1;", nativeQuery = true)
+    String getARandomUrl();
 
 }
