@@ -32,7 +32,7 @@ public class ShortenUrlTests {
         int latestUsageCount = shortenUrlRepository.findUsageCountByURL(url);
 
         mockMvc.perform(get("/count?url=" + url)).andDo(print()).andExpect(status().isOk()).andExpect(content().json("{\n" +
-                "  \"usageCount\": " + latestUsageCount + "\n" +
+                "  \"latestUsageCount\": " + latestUsageCount + "\n" +
                 "}"));
     }
 
@@ -78,11 +78,8 @@ public class ShortenUrlTests {
 
         String shortKey = shortenUrlRepository.findShortKeyByURL(url);
 
-        resultActions.andDo(print()).andExpect(status().isOk()).andExpect(content().json("{\n" +
-                "  \"url\": \"" + url + "\",\n" +
-                "  \"message\": \"Short key is already present for the given URL.\",\n" +
-                "  \"shortKey\": \"" + shortKey + "\"\n" +
-                "}"));
+        resultActions.andDo(print()).andExpect(status().isOk()).andExpect(content()
+                .json("{\n  \"message\": \"Short key is already present for the given URL.\"\n}"));
     }
 
     @Test

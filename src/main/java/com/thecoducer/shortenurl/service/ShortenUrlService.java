@@ -1,7 +1,5 @@
 package com.thecoducer.shortenurl.service;
 
-import com.thecoducer.shortenurl.dto.CountDTO;
-import com.thecoducer.shortenurl.dto.ResponseDTO;
 import com.thecoducer.shortenurl.dto.UrlInfoDTO;
 import com.thecoducer.shortenurl.model.UrlInfo;
 import com.thecoducer.shortenurl.repository.ShortenUrlRepository;
@@ -13,14 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ShortenUrlService {
-
-    ResponseDTO responseDTO = new ResponseDTO();
 
     @Autowired
     private ShortenUrlRepository shortenUrlRepository;
@@ -28,7 +22,9 @@ public class ShortenUrlService {
     @Autowired
     private UniqueShortKeyGeneratorService uniqueShortKeyGeneratorService;
 
-    public ResponseEntity<ResponseDTO> generateAndSaveShortKey(String url) {
+    public ResponseEntity<Map<String, String>> generateAndSaveShortKey(String url) {
+        Map<String, String> response = new TreeMap<String, String>();
+
         // remove leading and trailing spaces, if any
         url = url.trim();
 
@@ -36,7 +32,7 @@ public class ShortenUrlService {
 
         // check if url already exists or not
         if(shortKey != null) {
-            responseDTO.setMessage("Short key is already present for the given URL.");
+            response.put("message", "Short key is already present for the given URL.");
         }else{
             try {
                 shortKey = uniqueShortKeyGeneratorService.generateUniqueShortKey(url);
@@ -44,24 +40,25 @@ public class ShortenUrlService {
                 UrlInfo urlInfo = new UrlInfo(url, shortKey, System.currentTimeMillis());
                 shortenUrlRepository.save(urlInfo);
 
-                responseDTO.setMessage("Short key has been generated and saved successfully.");
+                response.put("message", "Short key has been generated and saved successfully.");
+                response.put("url", url);
+                response.put("shortKey", shortKey);
             }catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        responseDTO.setUrl(url);
-        responseDTO.setShortKey(shortKey);
-
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity<ResponseDTO> getShortKeyAndIncrementCount(String url) {
+    public ResponseEntity<Map<String, String>> getShortKeyAndIncrementCount(String url) {
+        Map<String, String> response = new TreeMap<String, String>();
+
         String shortKey = shortenUrlRepository.findShortKeyByURL(url);
 
         if(shortKey == null) {
-            responseDTO.setMessage("There is no short key generated for the given URL.");
+            response.put("message", "There is no short key generated for the given URL.");
         }else{
             try{
                 int currentCount = shortenUrlRepository.findUsageCountByURL(url);
@@ -69,20 +66,18 @@ public class ShortenUrlService {
             }catch (Exception e) {
                 e.printStackTrace();
             }
-            responseDTO.setMessage("Usage count has been incremented by 1.");
+            response.put("message", "Usage count has been incremented by 1.");
+            response.put("url", url);
+            response.put("shortKey", shortKey);
         }
 
-        responseDTO.setShortKey(shortKey);
-        responseDTO.setUrl(url);
-
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<CountDTO> getLatestUsageCount(String url) {
-        CountDTO countDTO = new CountDTO();
-        countDTO.setUsageCount(shortenUrlRepository.findUsageCountByURL(url));
-
-        return new ResponseEntity<>(countDTO, HttpStatus.OK);
+    public ResponseEntity<Map<String, Integer>> getLatestUsageCount(String url) {
+        Map<String, Integer> response = new TreeMap<String, Integer>();
+        response.put("latestUsageCount", shortenUrlRepository.findUsageCountByURL(url));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     public List<UrlInfoDTO> getUrlInfoData(Optional<Integer> page, Optional<Integer> size, Optional<String> sortBy) {

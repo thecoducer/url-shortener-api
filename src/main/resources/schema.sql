@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS url_info;
-
 CREATE TABLE IF NOT EXISTS `url_info` (
   `id` int PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `url` varchar(255) NOT NULL,

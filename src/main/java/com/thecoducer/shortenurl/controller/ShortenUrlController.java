@@ -1,9 +1,6 @@
 package com.thecoducer.shortenurl.controller;
 
-import com.thecoducer.shortenurl.dto.CountDTO;
-import com.thecoducer.shortenurl.dto.ResponseDTO;
 import com.thecoducer.shortenurl.dto.UrlInfoDTO;
-import com.thecoducer.shortenurl.model.UrlInfo;
 import com.thecoducer.shortenurl.service.ShortenUrlService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Api(tags = "APIs")
@@ -25,8 +23,8 @@ public class ShortenUrlController {
 
     @GetMapping("storeurl")
     @ApiOperation(value = "Generate a unique short key for the given URL and store their mapping.")
-    public ResponseEntity<ResponseDTO> shortenAndStoreUrl(@RequestParam String url) {
-        ResponseEntity<ResponseDTO> response = null;
+    public ResponseEntity<Map<String, String>> shortenAndStoreUrl(@RequestParam String url) {
+        ResponseEntity<Map<String, String>> response = null;
         if(url != null && !url.isEmpty()) {
             response = shortenUrlService.generateAndSaveShortKey(url);
         }
@@ -35,8 +33,8 @@ public class ShortenUrlController {
 
     @GetMapping("get")
     @ApiOperation(value = "Get unique short key for a URL and also increment its usage count.")
-    public ResponseEntity<ResponseDTO> retrieveShortKey(@RequestParam String url) {
-        ResponseEntity<ResponseDTO> response = null;
+    public ResponseEntity<Map<String, String>> retrieveShortKey(@RequestParam String url) {
+        ResponseEntity<Map<String, String>> response = null;
         if(url != null && !url.isEmpty()) {
             response = shortenUrlService.getShortKeyAndIncrementCount(url);
         }
@@ -45,8 +43,8 @@ public class ShortenUrlController {
 
     @GetMapping("count")
     @ApiOperation(value = "Get latest usage count of a URL.")
-    public ResponseEntity<CountDTO> retrieveLatestUsageCount(@RequestParam String url) {
-        ResponseEntity<CountDTO> response = null;
+    public ResponseEntity<Map<String, Integer>> retrieveLatestUsageCount(@RequestParam String url) {
+        ResponseEntity<Map<String, Integer>> response = null;
         if(url != null && !url.isEmpty()) {
             response = shortenUrlService.getLatestUsageCount(url);
         }
